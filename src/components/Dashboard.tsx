@@ -1,17 +1,35 @@
 "use client";
 import { trpc } from "@/app/_trpc/client";
 import UploadButton from "./UploadButton";
-import { GhostIcon, MessageSquare, Plus, Trash } from "lucide-react";
+import { GhostIcon, Loader2, MessageSquare, Plus, Trash } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Button } from "./ui/button";
+import { useState } from "react";
 
 const Dashboard = () => {
+  const [currentlyDeletingFile, setCurrentlyDeletingFile] =
+    useState<String | null>(null);
+
+  const utils = trpc.useContext();
+
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
 
+  const { mutate: deleteFile } = trpc.deleteFile.useMutation({
+    onSuccess(data, variables, context) {
+      utils.getUserFiles.invalidate();
+    },
+    onMutate({ id }) {
+      setCurrentlyDeletingFile(id);
+    },
+    onSettled(data, error, variables, context) {
+      setCurrentlyDeletingFile(null);
+    },
+  });
+
   return (
-    <main className="mx-auto max-w-7xl md:p-10">
+    <main className="p-4 mx-auto max-w-7xl md:p-10">
       <div className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0">
         <h1 className="mb-3 font-bold text-5xl text-gray-900">My Files</h1>
         <UploadButton />
@@ -19,7 +37,7 @@ const Dashboard = () => {
 
       {/* display all user files */}
       {files && files?.length !== 0 ? (
-        <ul className="mt-8 grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3 ">
+        <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3 ">
           {files
             .sort(
               (a, b) =>
@@ -58,8 +76,19 @@ const Dashboard = () => {
                     mocked
                   </div>
                   {/* del bt */}
-                  <Button size="sm" className="w-full" variant="destructive">
-                    <Trash className="h-4 w-4" />
+                  <Button
+                    onClick={() => {
+                      deleteFile({ id: file.id });
+                    }}
+                    size="sm"
+                    className="w-full"
+                    variant="destructive"
+                  >
+                    {currentlyDeletingFile === file.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
                 {/*  */}
