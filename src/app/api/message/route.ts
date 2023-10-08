@@ -54,7 +54,7 @@ export const POST = async (req: NextRequest) => {
     namespace: file.id,
   });
 
-  const results = await vectorStore.similaritySearch(message, 2);
+  const results = await vectorStore.similaritySearch(message, 6);
 
   //prev messages
 
