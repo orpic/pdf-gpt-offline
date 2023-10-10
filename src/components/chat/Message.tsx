@@ -10,7 +10,6 @@ interface MessageProps {
   isNextmessageSamePerson: boolean;
 }
 
-// eslint-disable-next-line react/display-name
 const Message = forwardRef<HTMLDivElement, MessageProps>(
   ({ message, isNextmessageSamePerson }, ref) => {
     return (
@@ -82,4 +81,6 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
     );
   }
 );
+
+Message.displayName = "Message";
 export default Message;

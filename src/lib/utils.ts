@@ -1,6 +1,14 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
- 
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
+}
+
+export function absoluteurl(path: string) {
+  if (typeof window != "undefined") return path;
+
+  if (process.env.VERCEL_URL) return `http://${process.env.VERCEL_URL}${path}`;
+
+  return `http://localhost:${process.env.PORT ?? 3000}${path}`;
 }
