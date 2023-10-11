@@ -1,4 +1,3 @@
-import { getUserSubscriptionPlan } from "@/lib/stripe";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +11,6 @@ import Image from "next/image";
 import { Icons } from "./Icons";
 import Link from "next/link";
 import { Gem } from "lucide-react";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface UserAccountNavProps {
   email: string | undefined;
@@ -25,8 +23,6 @@ const UserAccountNav = async ({
   imageUrl,
   name,
 }: UserAccountNavProps) => {
-  const subscriptionPlan = await getUserSubscriptionPlan();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="overflow-visible">
@@ -65,19 +61,9 @@ const UserAccountNav = async ({
         <DropdownMenuItem asChild>
           <Link href="/dashboard">Dashboard</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          {subscriptionPlan.isSubscribed ? (
-            <Link href="/dashboard/billing">Manage Billing</Link>
-          ) : (
-            <Link href="/peicing">
-              Upgrade <Gem className="text-blue-600 h-4 w-4 ml-1.5" />
-            </Link>
-          )}
-        </DropdownMenuItem>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer">
-          <LogoutLink>Logout</LogoutLink>
-        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer"></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
