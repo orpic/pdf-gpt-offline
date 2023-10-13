@@ -1,0 +1,41 @@
+version: '3'
+services:
+  nextjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - minio
+      - mysql
+
+  minio:
+    image: minio/minio
+    container_name: my-minio
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: password
+    ports:
+      - "9000:9000"
+    volumes:
+      - minio-data:/data
+    command: [ "server", "--console-address", ":9001", "/data" ]
+
+  mysql:
+    image: mysql:8
+    container_name: my-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+      MYSQL_DATABASE: mydb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --default-authentication-plugin=caching_sha2_password
+
+volumes:
+  minio-data:
+  mysql-data:
