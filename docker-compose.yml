@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
   nextjs-app:
     build:
@@ -21,6 +21,7 @@ services:
     volumes:
       - minio-data:/data
     command: [ "server", "--console-address", ":9001", "/data" ]
+    network_mode: host
 
   mysql:
     image: mysql:8
