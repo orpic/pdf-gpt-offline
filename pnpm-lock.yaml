@@ -56,6 +56,9 @@ dependencies:
   ai:
     specifier: ^2.2.14
     version: 2.2.15(react@18.2.0)(solid-js@1.8.1)(svelte@4.2.1)(vue@3.3.4)
+  chromadb:
+    specifier: ^1.5.11
+    version: 1.5.11
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -67,7 +70,7 @@ dependencies:
     version: 2.30.0
   langchain:
     specifier: ^0.0.162
-    version: 0.0.162(pdf-parse@1.1.1)
+    version: 0.0.162(chromadb@1.5.11)(pdf-parse@1.1.1)
   lucide-react:
     specifier: ^0.284.0
     version: 0.284.0(react@18.2.0)
@@ -1857,6 +1860,23 @@ packages:
     dev: false
     optional: true
 
+  /chromadb@1.5.11:
+    resolution: {integrity: sha512-mIg0DtWZFsf4hl05orRixIw3lBYKUc4AGydbUQVwd7sjwaCsgP1j0qHwYxoopj2H1L7yc8OUyFKhi79MoFMoMQ==}
+    engines: {node: '>=14.17.0'}
+    peerDependencies:
+      cohere-ai: ^5.0.0 || ^6.0.0
+      openai: ^3.0.0 || ^4.0.0
+    peerDependenciesMeta:
+      cohere-ai:
+        optional: true
+      openai:
+        optional: true
+    dependencies:
+      isomorphic-fetch: 3.0.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /class-variance-authority@0.7.0:
     resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
     dependencies:
@@ -3116,6 +3136,15 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
+  /isomorphic-fetch@3.0.0:
+    resolution: {integrity: sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==}
+    dependencies:
+      node-fetch: 2.7.0
+      whatwg-fetch: 3.6.19
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /iterator.prototype@1.1.2:
     resolution: {integrity: sha512-DR33HMMr8EzwuRL8Y9D3u2BMj8+RqSE850jfGu59kS7tbmPLzGkZmVSfyCFSDxuZiEY6Rzt3T2NA/qU+NwVj1w==}
     dependencies:
@@ -3185,7 +3214,7 @@ packages:
       json-buffer: 3.0.1
     dev: true
 
-  /langchain@0.0.162(pdf-parse@1.1.1):
+  /langchain@0.0.162(chromadb@1.5.11)(pdf-parse@1.1.1):
     resolution: {integrity: sha512-b8LfCpGarsdMM1MDTIZsVg/U5DfV9uxFvzJwYSCnMJ7YWfPgTI6W8c/zYMc532jnoU3bUmax2JLXsDLH6IgnPg==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -3450,6 +3479,7 @@ packages:
       ansi-styles: 5.2.0
       binary-extensions: 2.2.0
       camelcase: 6.3.0
+      chromadb: 1.5.11
       decamelize: 1.2.0
       expr-eval: 2.0.2
       flat: 5.0.2
@@ -5396,6 +5426,10 @@ packages:
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+    dev: false
+
+  /whatwg-fetch@3.6.19:
+    resolution: {integrity: sha512-d67JP4dHSbm2TrpFj8AbO8DnL1JXL5J9u0Kq2xW6d0TFDbCA3Muhdt8orXC22utleTVj7Prqt82baN6RBvnEgw==}
     dev: false
 
   /whatwg-url@5.0.0:
