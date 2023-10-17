@@ -12,8 +12,9 @@ datasource db {
 }
 
 model Group {
-  id        String @id @unique @default(cuid())
-  groupname String @unique
+  id        String   @id @unique @default(cuid())
+  groupname String   @unique
+  createdAt DateTime @default(now())
 
   File    File[]
   Message Message[]

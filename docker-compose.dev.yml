@@ -13,6 +13,7 @@ services:
       - mysql
 
   adminer:
+    container_name: pdf-gpt-adminer-v1
     image: adminer
     ports:
       - 8080:8080

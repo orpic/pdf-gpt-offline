@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   nextjs-app:
+    container_name: pdf-gpt-nextjs-app-v1
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,10 +13,12 @@ services:
 
   minio:
     image: minio/minio
-    container_name: my-minio
+    container_name: pdf-gpt-my-minio-v1
     environment:
       MINIO_ROOT_USER: root
       MINIO_ROOT_PASSWORD: password
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
     ports:
       - "9000:9000"
     volumes:
@@ -25,7 +28,7 @@ services:
 
   mysql:
     image: mysql:8
-    container_name: my-mysql
+    container_name: pdf-gpt-my-mysql-v1
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_USER: myuser
