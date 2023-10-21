@@ -1,12 +1,35 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import SearchCreateGroup from "@/components/SearchCreateGroup";
-import { buttonVariants } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import React from "react";
+import { trpc } from "./_trpc/client";
 
 export default function Home() {
+  const { data: groups, isLoading } = trpc.getGroups.useQuery();
+
+  // database call
+  // const groups = [
+  //   {
+  //     id: "tailwind",
+  //     groupname: "Group tailwind ",
+  //     createdAt: "23-12-2023",
+  //   },
+  //   {
+  //     id: "next",
+  //     groupname: "Group next",
+  //     createdAt: "23-12-2023",
+  //   },
+  //   {
+  //     id: "tailwindnext",
+  //     groupname: "Group tailwind next ",
+  //     createdAt: "23-12-2023",
+  //   },
+  //   {
+  //     id: "vite",
+  //     groupname: "Group vite ",
+  //     createdAt: "23-12-2023",
+  //   },
+  // ];
+
   return (
     <React.Fragment>
       <MaxWidthWrapper className="mb-12 mt-20 sm:mt-10 flex flex-col items-center justify-center text-center">
@@ -49,8 +72,8 @@ export default function Home() {
                 Start asking questions
               </span>
               <span className="mt-2 text-zinc-700">
-                It&apos;s that simple. Try out PDF-GPT today - it really takes
-                less than a minute.
+                It&apos;s that simple. Try PDF-GPT today - it really takes less
+                than a minute.
               </span>
             </div>
           </li>
@@ -60,7 +83,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 lg:px-8">
           <div className="mt-16 flow-root sm:mt-24">
             <div className=" rounded-xl bg-gray-900/5  ring-1 ring-inset ring-gray-900/10  lg:rounded-2xl ">
-              <SearchCreateGroup />
+              <SearchCreateGroup groups={groups} />
             </div>
           </div>
         </div>

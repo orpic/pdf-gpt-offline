@@ -2,8 +2,7 @@ import Link from "next/link";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import React from "react";
 import { buttonVariants } from "./ui/button";
-import { ArrowRight } from "lucide-react";
-import UserAccountNav from "./UserAccountNav";
+import { ArrowUpRightSquareIcon, Github } from "lucide-react";
 import MobileNav from "./MobileNav";
 
 const Navbar = () => {
@@ -17,22 +16,19 @@ const Navbar = () => {
             <span>PDF-GPT</span>
           </Link>
           <MobileNav isAuth={!!user} />
-          <div className="hidden items-center space-x-4 sm:flex">
+          <div className="hidden items-center space-x-1 sm:flex">
             <>
               <Link
-                href="/dashboard"
+                target="_blank"
+                href="https://github.com/orpic/pdf-gpt#readme"
                 className={buttonVariants({
                   variant: "ghost",
                   size: "sm",
                 })}
               >
-                Dashboard
+                Github Repo
+                <Github className="ml-1.5" />
               </Link>
-              <UserAccountNav
-                name={"Admin"}
-                email={"admin@pdf-gpt"}
-                imageUrl={""}
-              />
             </>
           </div>
         </div>

@@ -5,6 +5,11 @@ import { z } from "zod";
 import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
 
 export const appRouter = router({
+  //
+  getGroups: publicProcedure.query(async () => {
+    return await db.group.findMany();
+  }),
+
   getUserFiles: publicProcedure.query(async () => {
     return await db.file.findMany();
   }),
