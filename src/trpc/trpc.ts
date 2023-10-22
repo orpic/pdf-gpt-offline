@@ -11,6 +11,7 @@ const middleware = t.middleware;
  */
 
 const isAuth = middleware(async (opts) => {
+  // get logged in user via some logic or external api
   return opts.next({
     ctx: {
       user: 1,

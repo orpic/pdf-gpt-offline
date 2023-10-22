@@ -19,7 +19,7 @@ const UploadDropzone = () => {
 
   const { toast } = useToast();
 
-  const { startUpload } = 
+  // const { startUpload } =
   // we need a new uploader local/file liek s3 bucket
   // useUploadThing(
   //   isSubscribed ? "proPlanUploader" : "freePlanUploader"

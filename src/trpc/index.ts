@@ -10,6 +10,37 @@ export const appRouter = router({
     return await db.group.findMany();
   }),
 
+  createGroup: publicProcedure
+    .input(
+      z.object({
+        groupName: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const createGroup = await db.group.create({
+        data: {
+          groupname: input.groupName,
+        },
+      });
+
+      return createGroup;
+    }),
+
+  getGroupFiles: publicProcedure
+    .input(
+      z.object({
+        groupId: z.string().nullish(),
+      })
+    )
+    .query(async ({ input }) => {
+      const groupId = input.groupId;
+      return await db.file.findMany({
+        where: {
+          groupId: input.groupId,
+        },
+      });
+    }),
+
   getUserFiles: publicProcedure.query(async () => {
     return await db.file.findMany();
   }),

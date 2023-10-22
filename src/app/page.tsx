@@ -1,11 +1,8 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import SearchCreateGroup from "@/components/SearchCreateGroup";
 import React from "react";
-import { trpc } from "./_trpc/client";
 
 export default function Home() {
-  const { data: groups, isLoading } = trpc.getGroups.useQuery();
-
   // database call
   // const groups = [
   //   {
@@ -32,10 +29,10 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      <MaxWidthWrapper className="mb-12 mt-20 sm:mt-10 flex flex-col items-center justify-center text-center">
+      <MaxWidthWrapper className="mb-12 mt-20 sm:mt-10 flex flex-col items-center justify-center text-center ">
         <h1 className="max-w-4xl text-5xl font-bold md:text-6xl lg:text-7xl">
-          Chat with your <span className="text-blue-600">documents</span> in
-          seconds.
+          Chat with your <span className="text-blue-600">PDF&apos;s</span>{" "}
+          offline.
         </h1>
       </MaxWidthWrapper>
       {/* Feature section */}
@@ -83,7 +80,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 lg:px-8">
           <div className="mt-16 flow-root sm:mt-24">
             <div className=" rounded-xl bg-gray-900/5  ring-1 ring-inset ring-gray-900/10  lg:rounded-2xl ">
-              <SearchCreateGroup groups={groups} />
+              <SearchCreateGroup />
             </div>
           </div>
         </div>

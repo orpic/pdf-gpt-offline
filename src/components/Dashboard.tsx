@@ -6,15 +6,32 @@ import Skeleton from "react-loading-skeleton";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { groupId, groupName } from "@/constants/queryParams";
 
 const Dashboard = () => {
+  const searchParams = useSearchParams();
+  const groupIdParam = searchParams.get(groupId);
+  const groupNameParam = searchParams.get(groupName);
+
   const [currentlyDeletingFile, setCurrentlyDeletingFile] =
     useState<String | null>(null);
 
   const utils = trpc.useContext();
 
-  const { data: files, isLoading } = trpc.getUserFiles.useQuery();
+  const { data: files, isLoading: isFilesLoading } =
+    trpc.getGroupFiles.useQuery(
+      {
+        groupId: groupIdParam,
+      },
+      {
+        enabled:
+          groupIdParam !== null &&
+          groupIdParam !== undefined &&
+          groupIdParam !== "",
+      }
+    );
 
   const { mutate: deleteFile } = trpc.deleteFile.useMutation({
     onSuccess(data, variables, context) {
@@ -31,8 +48,10 @@ const Dashboard = () => {
   return (
     <main className="p-4 mx-auto max-w-7xl md:p-10">
       <div className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0">
-        <h1 className="mb-3 font-bold text-5xl text-gray-900">My Files</h1>
-        <UploadButton />
+        <h1 className="mb-3 font-bold text-5xl text-gray-900">
+          Files in group: {groupNameParam}
+        </h1>
+        {/* <UploadButton /> */}
       </div>
 
       {/* display all user files */}
@@ -95,7 +114,7 @@ const Dashboard = () => {
               </li>
             ))}
         </ul>
-      ) : isLoading ? (
+      ) : isFilesLoading ? (
         <Skeleton height={100} className="my-2 " count={3} />
       ) : (
         <div className="mt-16 flex flex-col items-center gap-2 ">

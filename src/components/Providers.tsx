@@ -12,7 +12,7 @@ const Providers = ({ children }: PropsWithChildren) => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: absoluteurl("/app/trpc"),
+          url: absoluteurl("/api/trpc"),
         }),
       ],
     })
