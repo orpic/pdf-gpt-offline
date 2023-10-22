@@ -160,11 +160,11 @@ const SearchCreateGroup: FC<SearchCreateGroupProps> = () => {
           )}
         >
           Press{" "}
-          <span className="flex items-center justify-center mx-1.5 bg-zinc-200 rounded-md px-1.5">
+          <span className="flex items-center justify-center mx-1.5 bg-zinc-900 rounded-md px-1.5">
             Enter <CornerDownLeft className="w-5 h-5 " />
           </span>{" "}
           to create a group with name:{" "}
-          <span className="flex items-center justify-center mx-1.5 bg-zinc-200 rounded-md px-1.5">
+          <span className="flex items-center justify-center mx-1.5 bg-zinc-900 rounded-md px-1.5">
             {searchString}
           </span>
         </div>
@@ -212,7 +212,7 @@ const SearchCreateGroup: FC<SearchCreateGroupProps> = () => {
                 <li key={eachGroup.id}>
                   <div
                     className={`flex justify-between items-center w-full text-base px-1.5 py-1 rounded-md my-1.5 ${
-                      keyboardFocusIndex === index ? "bg-white" : ""
+                      keyboardFocusIndex === index ? "bg-zinc-700" : ""
                     }`}
                   >
                     <span>{eachGroup.groupname}</span>
