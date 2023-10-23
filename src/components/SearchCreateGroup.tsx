@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { CornerDownLeft, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { FC, KeyboardEvent, useState } from "react";
+import { FC, KeyboardEvent, useEffect, useState } from "react";
 
 const CREATE_NEW_GROUP_TAB_INDEX = -2;
 const UNUSED_TAB_INDEX = -10;
@@ -28,6 +28,13 @@ const SearchCreateGroup: FC<SearchCreateGroupProps> = () => {
         );
       },
     });
+
+  // in place of onSuccess of useQuery
+  useEffect(() => {
+    if (!isLoading) {
+      setFilteredGroups(groups ?? []);
+    }
+  }, [groups, isLoading]);
 
   // database call
   // const groups = [
@@ -187,44 +194,24 @@ const SearchCreateGroup: FC<SearchCreateGroupProps> = () => {
                 </div>
               </li>
             )}
-            {!isLoading &&
-              searchString === "" &&
-              Array.isArray(groups) &&
-              groups.map((eachGroup, index) => (
-                <li key={eachGroup.id}>
-                  <div
-                    className={`flex justify-between items-center w-full text-base px-1.5 py-1 rounded-md my-1.5 ${
-                      keyboardFocusIndex === index ? "bg-zinc-700" : ""
-                    }`}
-                  >
-                    <span>{eachGroup.groupname}</span>
-                    <span>
-                      {format(
-                        new Date(eachGroup.createdAt),
-                        "hh:mm a, dd MMMM yyyy"
-                      )}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            {searchString !== "" &&
-              filteredGroups.map((eachGroup, index) => (
-                <li key={eachGroup.id}>
-                  <div
-                    className={`flex justify-between items-center w-full text-base px-1.5 py-1 rounded-md my-1.5 ${
-                      keyboardFocusIndex === index ? "bg-zinc-700" : ""
-                    }`}
-                  >
-                    <span>{eachGroup.groupname}</span>
-                    <span>
-                      {format(
-                        new Date(eachGroup.createdAt),
-                        "hh:mm a, dd MMMM yyyy"
-                      )}
-                    </span>
-                  </div>
-                </li>
-              ))}
+
+            {filteredGroups.map((eachGroup, index) => (
+              <li key={eachGroup.id}>
+                <div
+                  className={`flex justify-between items-center w-full text-base px-1.5 py-1 rounded-md my-1.5 ${
+                    keyboardFocusIndex === index ? "bg-zinc-700" : ""
+                  }`}
+                >
+                  <span>{eachGroup.groupname}</span>
+                  <span>
+                    {format(
+                      new Date(eachGroup.createdAt),
+                      "hh:mm a, dd MMMM yyyy"
+                    )}
+                  </span>
+                </div>
+              </li>
+            ))}
           </ul>
         </>
       }
