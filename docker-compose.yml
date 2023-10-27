@@ -6,8 +6,8 @@ services:
     environment:
       MINIO_ROOT_USER: root
       MINIO_ROOT_PASSWORD: password
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ACCESS_KEY: my_access_key
+      MINIO_SECRET_KEY: my_secret_key
     ports:
       - "9000:9000"
     volumes:

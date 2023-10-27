@@ -17,6 +17,16 @@ export const appRouter = router({
       })
     )
     .mutation(async ({ input }) => {
+      const existingGroup = await db.group.findFirst({
+        where: {
+          groupname: input.groupName,
+        },
+      });
+
+      if (existingGroup) {
+        return existingGroup;
+      }
+
       const createGroup = await db.group.create({
         data: {
           groupname: input.groupName,
@@ -40,10 +50,6 @@ export const appRouter = router({
         },
       });
     }),
-
-  getUserFiles: publicProcedure.query(async () => {
-    return await db.file.findMany();
-  }),
 
   getFileMessages: publicProcedure
     .input(

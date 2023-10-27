@@ -11,7 +11,7 @@ import { useToast } from "./ui/use-toast";
 import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 
-const UploadDropzone = () => {
+const UploadDropzone = ({ groupIdParam }: { groupIdParam: string }) => {
   const router = useRouter();
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -58,26 +58,34 @@ const UploadDropzone = () => {
         setIsUploading(true);
         const progressInterval = startSimulatedProgress();
 
-        const res = await startUpload(acceptedFile);
+        const file = acceptedFile[0];
+        console.log(file);
 
-        if (!res) {
-          return toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          });
-        }
+        const formData = new FormData();
+        formData.append("pdfFile", file);
+        formData.append("groupId", groupIdParam);
+        const response = await fetch("/api/fileupload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await response.json();
 
-        const [fileResponse] = res;
-        const key = fileResponse?.key;
+        console.log("/api/fileupload response", data);
 
-        if (!key) {
-          return toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          });
-        }
+        return;
+
+        startUpload({ pdfFile: file });
+
+        // const [fileResponse] = res;
+        // const key = fileResponse?.key;
+
+        // if (!key) {
+        //   return toast({
+        //     title: "Something went wrong",
+        //     description: "Please try again later",
+        //     variant: "destructive",
+        //   });
+        // }
 
         //
 
@@ -88,7 +96,7 @@ const UploadDropzone = () => {
         clearInterval(progressInterval);
         setUploadProgress(100);
 
-        startPolling({ key });
+        // startPolling({ key });
       }}
     >
       {({ getRootProps, getInputProps, acceptedFiles }) => (
@@ -108,7 +116,7 @@ const UploadDropzone = () => {
                   <span className="font-semibold ">Click to upload</span> or
                   drag and drop
                 </p>
-                <p className="">PDF (upto {isSubscribed ? "4" : "2"}MB)</p>
+                <p className="">PDF upto 50 MB</p>
               </div>
 
               {acceptedFiles && acceptedFiles[0] ? (
@@ -141,9 +149,9 @@ const UploadDropzone = () => {
               ) : null}
 
               <input
-                {...getInputProps}
-                type="file"
-                id="dropzone-file"
+                {...getInputProps()}
+                // type="file"
+                // id="dropzone-file"
                 className="hidden"
               />
             </label>
@@ -154,7 +162,7 @@ const UploadDropzone = () => {
   );
 };
 
-const UploadButton = () => {
+const UploadButton = ({ groupIdParam }: { groupIdParam: string }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -172,10 +180,10 @@ const UploadButton = () => {
         }}
         asChild
       >
-        <Button>Upload PDF</Button>
+        <Button className="bg-blue-400 text-lg font-bold">Upload PDF</Button>
       </DialogTrigger>
       <DialogContent>
-        <UploadDropzone />
+        <UploadDropzone groupIdParam={groupIdParam} />
       </DialogContent>
     </Dialog>
   );

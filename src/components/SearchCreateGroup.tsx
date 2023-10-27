@@ -36,29 +36,6 @@ const SearchCreateGroup: FC<SearchCreateGroupProps> = () => {
     }
   }, [groups, isLoading]);
 
-  // database call
-  // const groups = [
-  //   {
-  //     id: "tailwind",
-  //     groupname: "Group tailwind ",
-  //     createdAt: "23-12-2023",
-  //   },
-  //   {
-  //     id: "next",
-  //     groupname: "Group next",
-  //     createdAt: "23-12-2023",
-  //   },
-  //   {
-  //     id: "tailwindnext",
-  //     groupname: "Group tailwind next ",
-  //     createdAt: "23-12-2023",
-  //   },
-  //   {
-  //     id: "vite",
-  //     groupname: "Group vite ",
-  //     createdAt: "23-12-2023",
-  //   },
-  // ];
   const [filteredGroups, setFilteredGroups] = useState(groups ?? []);
   const [searchString, setSearchString] = useState("");
   const [keyboardFocusIndex, setKeyboardFocusIndex] = useState(0);
@@ -111,7 +88,7 @@ const SearchCreateGroup: FC<SearchCreateGroupProps> = () => {
         createGroup({ groupName: searchString });
       } else if (keyboardFocusIndex >= 0) {
         router.push(
-          `/dashboard?${groupId}=${filteredGroups[keyboardFocusIndex].id}`
+          `/dashboard?${groupId}=${filteredGroups[keyboardFocusIndex].id}&${groupName}=${filteredGroups[keyboardFocusIndex].groupname}`
         );
       }
     }
