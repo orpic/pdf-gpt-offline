@@ -33,14 +33,14 @@ model File {
 
   uploadStatus uploadStatus @default(PENDING)
 
-  url      String
-  key      String
+  size     Int
+  etag     String
   messages Message[]
 
   creadetAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Group     Group?   @relation(fields: [groupId], references: [id])
-  groupId   String?
+  groupId   String
 }
 
 model Message {

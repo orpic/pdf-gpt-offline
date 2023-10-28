@@ -30,7 +30,7 @@ const Dashboard = () => {
   const { data: files, isLoading: isFilesLoading } =
     trpc.getGroupFiles.useQuery(
       {
-        groupId: groupIdParam,
+        groupId: groupIdParam!,
       },
       {
         enabled:
@@ -42,7 +42,7 @@ const Dashboard = () => {
 
   const { mutate: deleteFile } = trpc.deleteFile.useMutation({
     onSuccess(data, variables, context) {
-      utils.getUserFiles.invalidate();
+      utils.getGroupFiles.invalidate();
     },
     onMutate({ id }) {
       setCurrentlyDeletingFile(id);

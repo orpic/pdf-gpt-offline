@@ -39,7 +39,7 @@ export const appRouter = router({
   getGroupFiles: publicProcedure
     .input(
       z.object({
-        groupId: z.string().nullish(),
+        groupId: z.string(),
       })
     )
     .query(async ({ input }) => {
@@ -119,11 +119,7 @@ export const appRouter = router({
   getFile: publicProcedure
     .input(z.object({ key: z.string() }))
     .mutation(async ({ input }) => {
-      const file = await db.file.findFirst({
-        where: {
-          key: input.key,
-        },
-      });
+      const file = await db.file.findFirst();
 
       if (!file) throw new TRPCError({ code: "NOT_FOUND" });
 
