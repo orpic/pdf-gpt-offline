@@ -12,7 +12,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
     "@mantine/hooks": "^7.1.2",
-    "@prisma/client": "5.4.0",
+    "@prisma/client": "5.5.2",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -58,7 +58,7 @@
     "eslint": "latest",
     "eslint-config-next": "latest",
     "postcss": "latest",
-    "prisma": "5.4.0",
+    "prisma": "5.5.2",
     "tailwindcss": "latest",
     "typescript": "latest"
   }

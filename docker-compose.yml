@@ -34,7 +34,23 @@ services:
     image: adminer
     ports:
       - 8080:8080
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    volumes:
+      - 'ollama-data:/root/.ollama'
+    ports:
+      - '11434:11434'
+    container_name: pdf-gpt-ollama
+    image: ollama/ollama
 
 volumes:
   minio-data:
   mysql-data:
+  ollama-data:

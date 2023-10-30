@@ -9,25 +9,22 @@ export const POST = async (req: NextRequest) => {
   const data = await req.formData();
   const pdfFile: File | null = data.get("pdfFile") as unknown as File;
   const groupId = data.get("groupId") as string;
+  const fileName = pdfFile.name;
 
-  if (!pdfFile) {
+  const randomString = Math.random().toString(36).substring(7);
+  const uniqueFileName = `${fileName}-${randomString}`;
+
+  if (!pdfFile || !groupId) {
     return NextResponse.json({
-      code: "MISSING_DATA" as const,
-      message: "No PDF file recieved",
+      code: "DATA_ERROR" as const,
+      message: !pdfFile ? "No PDF file received" : "No groupId received",
     });
   }
 
-  if (!groupId) {
+  if (pdfFile.type !== "application/pdf") {
     return NextResponse.json({
-      code: "MISSING_DATA" as const,
-      message: "No groupId recieved",
-    });
-  }
-
-  if (!pdfFile && !groupId) {
-    return NextResponse.json({
-      code: "MISSING_DATA" as const,
-      message: "No data recieved",
+      code: "DATA_ERROR" as const,
+      message: "Please upload a PDF File",
     });
   }
 
@@ -74,7 +71,7 @@ export const POST = async (req: NextRequest) => {
         }>((resolve, reject) => {
           minioClient.putObject(
             groupId,
-            pdfFile.name,
+            uniqueFileName,
             buffer,
             pdfFile.size,
             metaData,
@@ -110,20 +107,20 @@ export const POST = async (req: NextRequest) => {
     },
   });
 
-  if (fileExists?.name === pdfFile.name && fileExists.etag === objInfo.etag) {
+  if (fileExists?.name === uniqueFileName && fileExists.etag === objInfo.etag) {
     return NextResponse.json({
       code: "DATABASE_ERROR" as const,
       message: "Error file already present in database",
     });
   }
-
   const createdFile = await db.file.create({
     data: {
       etag: objInfo.etag,
-      name: pdfFile.name,
+      name: uniqueFileName,
       size: pdfFile.size,
       groupId: groupId,
-      uploadStatus: "PROCESSING",
+      randomString: randomString,
+      uploadStatus: "PENDING",
     },
   });
 
@@ -131,25 +128,67 @@ export const POST = async (req: NextRequest) => {
   const loader = new PDFLoader(pdfBlob);
   const pageLevelDocs = await loader.load();
 
-  const embeddings = new OllamaEmbeddings({
-    model: "llama2-uncensored", // default value is llama2
-    baseUrl: "http://localhost:11434", // default value
-    requestOptions: {
-      useMMap: true,
-      numThread: 4,
-      numGpu: 1,
-    },
+  try {
+    await db.file.update({
+      where: {
+        id: createdFile.id,
+      },
+      data: {
+        uploadStatus: "PROCESSING",
+      },
+    });
+    console.log("OllamaEmbeddings....START");
+
+    const embeddings = new OllamaEmbeddings({
+      model: "codellama:13b", // default value is llama2
+      baseUrl: "http://localhost:11434", // default value
+      requestOptions: {
+        useMMap: true,
+        numThread: 4,
+        numGpu: 1,
+      },
+    });
+
+    console.log("OllamaEmbeddings....END");
+    console.log("Chroma....START");
+
+    const vectorStores = await Chroma.fromDocuments(pageLevelDocs, embeddings, {
+      collectionName: createdFile.id,
+      url: "http://localhost:8000",
+      collectionMetadata: {
+        "hnsw:space": "cosine",
+      },
+    });
+
+    console.log("Chroma....END");
+    console.log("vectorStores", vectorStores);
+
+    await db.file.update({
+      where: {
+        id: createdFile.id,
+      },
+      data: {
+        uploadStatus: "SUCCESS",
+      },
+    });
+  } catch (error) {
+    await db.file.update({
+      where: {
+        id: createdFile.id,
+      },
+      data: {
+        uploadStatus: "FAILED",
+      },
+    });
+
+    return NextResponse.json({
+      code: "EMBEDDING_ERROR" as const,
+      message: "Either Ollama or Chroma are not running",
+    });
+  }
+
+  return NextResponse.json({
+    code: "SUCCESS" as const,
+    message: "File saved and vectors created",
   });
-
-  const vectorStore = await Chroma.fromDocuments(pageLevelDocs, embeddings, {
-    collectionName: "a-test-collection",
-    url: "http://localhost:8000",
-    collectionMetadata: {
-      "hnsw:space": "cosine",
-    },
-  });
-
-  // Optional, can be used to specify the distance method of the embedding space https://docs.trychroma.com/usage-guide#changing-the-distance-function
-
-  return NextResponse.json({ file: "upload test 1" });
 };
