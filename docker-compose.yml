@@ -50,7 +50,16 @@ services:
     container_name: pdf-gpt-ollama
     image: ollama/ollama
 
+  chroma:
+    ports:
+      - '8000:8000'
+    image: chromadb/chroma
+    container_name: pdf-gpt-chromadb
+    volumes:
+      - chroma-data:/root/.chroma
+
 volumes:
   minio-data:
   mysql-data:
   ollama-data:
+  chroma-data:

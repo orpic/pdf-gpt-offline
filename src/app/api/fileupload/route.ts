@@ -101,6 +101,35 @@ export const POST = async (req: NextRequest) => {
     });
   }
 
+  // const presignedUrl = await (async () => {
+  //   try {
+  //     const presignedUrl = await new Promise((resolve, reject) => {
+  //       minioClient.presignedGetObject(
+  //         groupId,
+  //         uniqueFileName,
+  //         365 * 24 * 60 * 60,
+  //         function (err, presignedUrl) {
+  //           if (err) {
+  //             reject(err);
+  //           } else {
+  //             resolve(presignedUrl);
+  //           }
+  //         }
+  //       );
+  //     });
+
+  //     console.log("presignedUrl", presignedUrl);
+  //     return presignedUrl;
+  //   } catch (error) {
+  //     console.error("Error creating presignedUrl:", error);
+  //     return {
+  //       presignedUrl: "NOT_FOUND" as const,
+  //     };
+  //   }
+  // })();
+
+  // console.log(presignedUrl);
+
   const fileExists = await db.file.findFirst({
     where: {
       etag: objInfo.etag,

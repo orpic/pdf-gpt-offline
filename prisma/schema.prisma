@@ -37,7 +37,6 @@ model File {
   randomString String
   etag         String
   messages     Message[]
-  url          String
 
   creadetAt DateTime @default(now())
   updatedAt DateTime @updatedAt
