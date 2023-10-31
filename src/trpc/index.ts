@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
 import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
+import { minioClient } from "@/lib/minio";
 
 export const appRouter = router({
   //
@@ -124,6 +125,46 @@ export const appRouter = router({
       if (!file) throw new TRPCError({ code: "NOT_FOUND" });
 
       return file;
+    }),
+
+  getPrsignedUrl: publicProcedure
+    .input(
+      z.object({
+        groupId: z.string(),
+        uniqueFileName: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { groupId, uniqueFileName } = input;
+
+      const presignedUrl = await (async () => {
+        try {
+          const presignedUrl = await new Promise((resolve, reject) => {
+            minioClient.presignedGetObject(
+              groupId,
+              uniqueFileName,
+              365 * 24 * 60 * 60,
+              function (err, presignedUrl) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(presignedUrl);
+                }
+              }
+            );
+          });
+
+          console.log("presignedUrl", presignedUrl);
+          return presignedUrl;
+        } catch (error) {
+          console.error("Error creating presignedUrl:", error);
+          return {
+            presignedUrl: "NOT_FOUND" as const,
+          };
+        }
+      })();
+      console.log("presignedUrl", presignedUrl);
+      return presignedUrl;
     }),
 
   deleteFile: publicProcedure

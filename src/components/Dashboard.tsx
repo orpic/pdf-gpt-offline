@@ -75,8 +75,14 @@ const Dashboard = () => {
                 key={file.id}
                 className="col-span-1 divide-y divide-white rounded-lg border  border-white  transition shadow-lg "
               >
-                <Link
-                  href={`/dashboard/${file.id}`}
+                <div
+                  onClick={() => {
+                    //
+                    router.push(
+                      `/dashboard/${file.id}?${groupId}=${groupIdParam}&${groupName}=${groupNameParam}`
+                    );
+                  }}
+                  // href={`/dashboard/${file.id}`}
                   className="flex flex-col gap-2"
                 >
                   <div className="pt-6 px-6 flex w-full items-center justify-between space-x-6">
@@ -88,10 +94,10 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
                 {/*  */}
                 <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
-                  <div className="flex items-center gap-2 col-span-2 text-base">
+                  <div className="flex items-center gap-2 col-span-2 text-bas?${groupId}=${groupIdParam}&${groupName}=${groupNameParam}e">
                     {/* <Plus className="h-4 w-4" /> */}
                     {/* {file.creadetAt} */}
                     {format(
