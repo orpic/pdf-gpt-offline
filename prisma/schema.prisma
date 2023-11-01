@@ -37,6 +37,7 @@ model File {
   randomString String
   etag         String
   messages     Message[]
+  url          String    @default("NOT_FOUND") @db.VarChar(4096)
 
   creadetAt DateTime @default(now())
   updatedAt DateTime @updatedAt

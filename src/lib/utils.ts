@@ -13,7 +13,7 @@ export function absoluteurl(path: string) {
 }
 
 export function constructMetadata({
-  title = "PDF-GPT - Now works Offline",
+  title = "PDF-GPT - Offline",
   description = "PDF_GPT is an open source offline software to make chatting with yout PDF files easy.",
   image = "/thumbnail.png",
   icons = "favicon.ico",

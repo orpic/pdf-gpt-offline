@@ -127,15 +127,16 @@ export const appRouter = router({
       return file;
     }),
 
-  getPrsignedUrl: publicProcedure
+  getPresignedUrl: publicProcedure
     .input(
       z.object({
         groupId: z.string(),
         uniqueFileName: z.string(),
+        fileId: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { groupId, uniqueFileName } = input;
+      const { groupId, uniqueFileName, fileId } = input;
 
       const presignedUrl = await (async () => {
         try {
@@ -143,7 +144,7 @@ export const appRouter = router({
             minioClient.presignedGetObject(
               groupId,
               uniqueFileName,
-              365 * 24 * 60 * 60,
+              24 * 60 * 60,
               function (err, presignedUrl) {
                 if (err) {
                   reject(err);
@@ -154,7 +155,7 @@ export const appRouter = router({
             );
           });
 
-          console.log("presignedUrl", presignedUrl);
+          // console.log("presignedUrl", presignedUrl);
           return presignedUrl;
         } catch (error) {
           console.error("Error creating presignedUrl:", error);
@@ -163,8 +164,19 @@ export const appRouter = router({
           };
         }
       })();
-      console.log("presignedUrl", presignedUrl);
-      return presignedUrl;
+      // console.log("presignedUrl", presignedUrl);
+      // return presignedUrl;
+
+      await db.file.update({
+        where: {
+          id: fileId,
+        },
+        data: {
+          url: presignedUrl as string,
+        },
+      });
+
+      return presignedUrl as string;
     }),
 
   deleteFile: publicProcedure

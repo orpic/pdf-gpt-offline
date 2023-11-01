@@ -1,14 +1,13 @@
 "use client";
 import { trpc } from "@/app/_trpc/client";
 import UploadButton from "./UploadButton";
-import { GhostIcon, Loader2, MessageSquare, Plus, Trash } from "lucide-react";
+import { GhostIcon, Loader2, Trash } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
-import Link from "next/link";
 import { format } from "date-fns";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { groupId, groupName } from "@/constants/queryParams";
+import { fileUrl, groupId, groupName } from "@/constants/queryParams";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -39,6 +38,17 @@ const Dashboard = () => {
           groupIdParam !== "",
       }
     );
+
+  const { mutate: getPresignedUrl } = trpc.getPresignedUrl.useMutation({
+    onSuccess(data, variables, context) {
+      // console.log("data", data);
+      router.push(
+        `/dashboard/${variables.fileId}?${groupId}=${groupIdParam}&${groupName}=${groupNameParam}`
+      );
+    },
+    onMutate(variables) {},
+    onError(error, variables, context) {},
+  });
 
   const { mutate: deleteFile } = trpc.deleteFile.useMutation({
     onSuccess(data, variables, context) {
@@ -78,9 +88,11 @@ const Dashboard = () => {
                 <div
                   onClick={() => {
                     //
-                    router.push(
-                      `/dashboard/${file.id}?${groupId}=${groupIdParam}&${groupName}=${groupNameParam}`
-                    );
+                    getPresignedUrl({
+                      groupId: groupIdParam!,
+                      uniqueFileName: file.name,
+                      fileId: file.id,
+                    });
                   }}
                   // href={`/dashboard/${file.id}`}
                   className="flex flex-col gap-2"
