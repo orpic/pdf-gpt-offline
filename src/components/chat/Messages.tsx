@@ -58,7 +58,7 @@ const Messages: FC<MessagesProps> = ({ fileId }) => {
   }, [entry, fetchNextPage]);
 
   return (
-    <div className="flex max-h-[calc(100vh-3.5rem-7rem)] border-zinc-200 flex-1 flex-col-reverse gap-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+    <div className="flex max-h-[calc(100vh-3.5rem-10rem)] border-zinc-200 flex-1 flex-col-reverse gap-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
       {combinedMessages && combinedMessages.length > 0 ? (
         combinedMessages.map((message, i) => {
           const isNextMessageSamePerson =
@@ -86,10 +86,10 @@ const Messages: FC<MessagesProps> = ({ fileId }) => {
         })
       ) : isLoading ? (
         <div className="w-full flex flex-col gap-2">
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
-          <Skeleton className="h-16" />
+          <Skeleton className="h-16" baseColor="black" />
+          <Skeleton className="h-16" baseColor="black" />
+          <Skeleton className="h-16" baseColor="black" />
+          <Skeleton className="h-16" baseColor="black" />
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center gap-2">

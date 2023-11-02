@@ -80,7 +80,7 @@ const PdfRenderer = ({ url }: pdfRendererProps) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
+    <div className="w-full text-zinc-100 rounded-md shadow flex flex-col items-center border-2 border-emerald-300 p-2">
       {/* pdf options */}
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
         <div className="flex items-center gap-1.5">
@@ -101,7 +101,7 @@ const PdfRenderer = ({ url }: pdfRendererProps) => {
               {...register("page")}
               className={cn(
                 "w-12 h-8 ",
-                errors.page && "focus-visible:ring-red-500"
+                errors.page && "focus-visible:ring-red-300"
               )}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -186,8 +186,8 @@ const PdfRenderer = ({ url }: pdfRendererProps) => {
       </div>
       {/* pdf options */}
       {/* rendering */}
-      <div className="flex-1 w-full max-h-screen">
-        <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)]">
+      <div className="flex-1 w-full h-screen">
+        <SimpleBar autoHide={false} className="max-h-[calc(100vh-14rem)]">
           <div ref={ref}>
             {/* doc */}
             <Document
@@ -195,7 +195,7 @@ const PdfRenderer = ({ url }: pdfRendererProps) => {
                 setNumPages(numPages);
               }}
               loading={
-                <div className="flex justify-center">
+                <div className="flex-1 justify-center">
                   <Loader2 className="my-24 h-6 w-6 animate-spin" />
                 </div>
               }
