@@ -3,7 +3,7 @@ import { SendMessageValidator } from "@/lib/validators/SendMessageValidator";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
 import { NextRequest } from "next/server";
 
-import { StreamingTextResponse, AIStream } from "ai";
+import { StreamingTextResponse, LangChainStream, OpenAIStream } from "ai";
 import { OllamaEmbeddings } from "langchain/embeddings/ollama";
 import { Chroma } from "langchain/vectorstores/chroma";
 import { ChatOllama } from "langchain/chat_models/ollama";
@@ -74,7 +74,8 @@ export const POST = async (req: NextRequest) => {
   });
 
   const stream = await model.pipe(new StringOutputParser()).stream(`
-  Use the following pieces of context (or previous conversaton if needed) to answer the users question in markdown format. \nIf you don't know the answer, just say that you don't know, don't try to make up an answer.
+  Assistant: Use the following pieces of context (or previous conversaton if needed) to answer the users question in markdown format.
+  User: Use the following pieces of context (or previous conversaton if needed) to answer the users question in markdown format. \nIf you don't know the answer, just say that you don't know and stop, don't try to make up an answer.
   \n----------------\n
   PREVIOUS CONVERSATION:
   ${formattedPrevMessages.map((message) => {
@@ -89,22 +90,13 @@ export const POST = async (req: NextRequest) => {
   USER INPUT: ${message}
   `);
 
-  // const streamai = AIStream(
-
-  // );
-
-  // stream, {
-  //   async onCompletion(completion) {
-  //     await db.message.create({
-  //       data: {
-  //         text: completion,
-  //         isUserMessage: false,
-  //         fileId,
-  //         userId,
-  //       },
-  //     });
+  // await db.message.create({
+  //   data: {
+  //     text: stream.pip,
+  //     isUserMessage: false,
+  //     fileId,
   //   },
-  // }
+  // });
 
   return new StreamingTextResponse(stream);
 };
