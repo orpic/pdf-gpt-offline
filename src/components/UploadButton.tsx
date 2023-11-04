@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 
@@ -11,7 +11,13 @@ import { useToast } from "./ui/use-toast";
 import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 
-const UploadDropzone = ({ groupIdParam }: { groupIdParam: string }) => {
+const UploadDropzone = ({
+  groupIdParam,
+  setIsOpen,
+}: {
+  groupIdParam: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
   const router = useRouter();
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -78,6 +84,8 @@ const UploadDropzone = ({ groupIdParam }: { groupIdParam: string }) => {
             description: data.message,
             variant: "destructive",
           });
+        } else {
+          setIsOpen(false);
         }
 
         console.log("/api/fileupload response after", data);
@@ -173,7 +181,7 @@ const UploadButton = ({ groupIdParam }: { groupIdParam: string }) => {
         <Button className="bg-blue-400 text-lg font-bold">Upload PDF</Button>
       </DialogTrigger>
       <DialogContent>
-        <UploadDropzone groupIdParam={groupIdParam} />
+        <UploadDropzone groupIdParam={groupIdParam} setIsOpen={setIsOpen} />
       </DialogContent>
     </Dialog>
   );
